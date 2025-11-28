@@ -1,0 +1,2305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="img/logo.png" type="image/png">
+    
+    <!-- Judul dan Meta Deskripsi untuk SEO -->
+    <title>Percetakan Arjuna - Kemasan Modern & Interaktif</title>
+    <meta name="description" content="Percetakan Arjuna Sleman, Yogyakarta. Spesialis cetak paper lunch box, rice box, dus sate, donat, martabak, dan kemasan UMKM kuliner. Desain gratis suka-suka, kualitas terjamin.">
+    <meta name="keywords" content="Paper Lunch Box, Rice paper Box, Dus Sate, Dus Corndog, Dus 18x18, Dus 20x20, Dus Donat, Dus Martabak, Dus Roti Bakar, Dus Burger, Dus Kebab, Dus FNB, Dus UMKM Kuliner, Percetakan Dus Yogyakarta, Cetak Kemasan Sleman, Ivory, Kraft, Duplex, Art Paper, Kemasan Herbal, Kemasan Kosmetik">
+    
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts for creative typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Three.js Library for 3D Viewer -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Canvas Confetti for Micro-interactions -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Post-processing and controls -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/OutlinePass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/FXAAShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/DepthLimitedBlurShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/UnpackDepthRGBAShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/SAOShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/SAOPass.js"></script>
+    
+    <style>
+        /* Menggunakan font Poppins untuk seluruh halaman */
+        body {
+            font-family: 'Poppins', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            overflow-x: hidden;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+         /* --- 3D FLIP CARD STYLES --- */
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            perspective: 1000px; /* Memberikan efek kedalaman 3D */
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 0.75rem;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .flip-card-front {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+        }
+
+        .flip-card-back {
+            background-color: #3b82f6;
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-back img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        .flip-content-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 1rem;
+            color: white;
+            text-align: left;
+        }
+        
+        /* Style untuk CTA button agar lebih menonjol */
+        .cta-button {
+            position: relative;
+            overflow: hidden;
+            transform: perspective(1px) translateZ(0);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border: 2px solid transparent;
+            background-size: 200% auto;
+            background-image: linear-gradient(to right, var(--tw-gradient-stops));
+        }
+
+        .cta-button:hover,
+        .cta-button:focus {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+            border-color: rgba(255, 255, 255, 0.5); 
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 0 15px rgba(255, 255, 255, 0.4); 
+            background-position: right center;  
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            animation: button-pop 0.3s ease-out; 
+        }
+        
+        @keyframes button-pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); } 
+            100% { transform: scale(1); }
+        }
+
+        .header-animate { transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out; }
+        .header-scrolled { transform: translateY(0); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+        /* Enhanced 3D Card Effect for Products & Benefits */
+        .product-card, .benefit-card {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        .product-card:hover, .benefit-card:hover {
+            transform: translateY(-10px) rotateX(2deg) rotateY(2deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+        
+        /* 2D Infinite Marquee Testimonial Styles */
+        .testimonial-marquee-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 2rem 0;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+        
+        .testimonial-track {
+            display: inline-flex;
+            gap: 2rem; /* Jarak antar kartu */
+            animation: scrollMarquee 40s linear infinite; /* Kecepatan sangat pelan & mewah */
+            width: max-content;
+        }
+        
+        .testimonial-marquee-container:hover .testimonial-track {
+            animation-play-state: paused;
+        }
+
+        .testimonial-card-2d {
+            width: 350px; 
+            white-space: normal; 
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .testimonial-card-2d:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        @keyframes scrollMarquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } 
+        }
+
+        /* Modern Developer Credit Styles */
+        .dev-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1.25rem;
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(75, 85, 99, 0.4);
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .dev-badge:hover {
+            background: rgba(31, 41, 55, 0.95);
+            border-color: rgba(59, 130, 246, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+        }
+        .dev-avatar {
+            position: relative;
+            margin-right: 0.75rem;
+        }
+        .dev-status-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 8px;
+            height: 8px;
+            background-color: #10B981; 
+            border: 1.5px solid #1F2937;
+            border-radius: 50%;
+            animation: pulse-status 2s infinite;
+        }
+        @keyframes pulse-status {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 4px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .dev-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            background: linear-gradient(90deg, #60A5FA, #A78BFA, #F472B6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
+        }
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+        .dev-role {
+            font-size: 0.65rem;
+            color: #9CA3AF;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Other Styles */
+        .section-title:hover { color: #3b82f6; transition: color 0.3s ease-in-out; }
+        .accordion-button:hover { background-color: #f3f4f6; }
+        .accordion-content { animation: slide-down 0.3s ease-out; }
+        @keyframes slide-down { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Toast */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; }
+        .toast { min-width: 250px; background: white; border-left: 4px solid; padding: 16px; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); animation: slideIn 0.3s ease-out forwards; display: flex; align-items: center; justify-content: space-between; }
+        .toast.success { border-color: #22c55e; } .toast.error { border-color: #ef4444; } .toast.info { border-color: #3b82f6; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(10px); } }
+
+        /* Mockup Canvas Container */
+        #mockup-canvas-container {
+            width: 100%;
+            height: 500px; /* Taller for better view */
+            cursor: grab;
+            border-radius: 1rem;
+            touch-action: none;
+            position: relative;
+            overflow: hidden;
+            background: #f3f4f6; /* Fallback */
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+        }
+        #mockup-canvas-container:active { cursor: grabbing; }
+        
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header & Navigasi -->
+    <header id="header" class="bg-white shadow-md sticky top-0 z-50 header-animate">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center max-w-7xl">
+            <div class="flex items-center space-x-3">
+                <img src="img/logo.png" alt="Logo Percetakan Arjuna" class="h-12 w-auto">
+                <a href="#" class="text-xl md:text-2xl font-bold text-gray-800 title-animate">Percetakan <span class="text-blue-600">Arjuna</span></a>
+            </div>
+            <div class="hidden md:flex items-center space-x-8" id="desktop-nav">
+                <a href="#produk" class="nav-link text-gray-600 hover:text-blue-600" data-section="produk">Produk</a>
+                <a href="#mockup-viewer" class="nav-link text-gray-600 hover:text-blue-600" data-section="mockup-viewer">Pratinjau 3D</a>
+                <a href="#tentang" class="nav-link text-gray-600 hover:text-blue-600" data-section="tentang">Tentang Kami</a>
+                <a href="#testimoni" class="nav-link text-gray-600 hover:text-blue-600" data-section="testimoni">Testimoni</a>
+                <a href="#faq" class="nav-link text-gray-600 hover:text-blue-600" data-section="faq">FAQ</a>
+                <a href="#kontak" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">Hubungi Kami</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-gray-600 hover:text-blue-600 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <a href="#produk" class="block py-2 px-6 text-sm text-gray-600 hover:bg-gray-100">Produk</a>
+            <a href="#mockup-viewer" class="block py-2 px-6 text-sm text-gray-600 hover:bg-gray-100">Pratinjau 3D</a>
+            <a href="#tentang" class="block py-2 px-6 text-sm text-gray-600 hover:bg-gray-100">Tentang Kami</a>
+             <a href="#testimoni" class="block py-2 px-6 text-sm text-gray-600 hover:bg-gray-100">Testimoni</a>
+            <a href="#faq" class="block py-2 px-6 text-sm text-gray-600 hover:bg-gray-100">FAQ</a>
+            <a href="#kontak" class="block py-2 px-6 text-sm text-gray-600 hover:bg-gray-100">Hubungi Kami</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Image Banner Section -->
+        <section class="w-full bg-white">
+            <img src="img/Banner.png.png" alt="Kemasan Produk Percetakan Arjuna" class="w-full h-auto hero-image">
+        </section>
+
+        <!-- Hero Section -->
+        <section class="bg-white" id="hero-section">
+            <div class="container mx-auto px-6 py-20 text-center max-w-7xl">
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-800 leading-tight" id="hero-title-container"></h1>
+                <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+                    Kesan pertama menentukan segalanya. Jangan biarkan produk istimewa Anda tampil biasa saja. Di Percetakan Arjuna, kami mengubah kemasan menjadi duta brand Anda. Biarkan tim desainer ahli kami merancang kemasan eksklusif sesuai visi Anda—sepenuhnya <span class="font-bold text-blue-600">GRATIS</span>. Ciptakan kemasan profesional tak terlupakan yang memikat pelanggan bahkan sebelum mereka mencicipi produk Anda.
+                </p>
+                <div class="mt-8 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="https://wa.me/6282226903074?text=Halo%20Percetakan%20Arjuna,%20saya%20tertarik%20untuk%20membuat%20kemasan%20custom." target="_blank" class="cta-button w-full sm:w-auto bg-green-500 text-white px-8 py-3 rounded-full font-semibold text-lg hover:bg-green-600 from-green-400 to-green-600">
+                        Konsultasi via WhatsApp
+                    </a>
+                    <a href="https://shopee.co.id/percetakan_arjuna?entryPoint=ShopBySearch&searchKeyword=percetakan%20arjuna" target="_blank" class="cta-button w-full sm:w-auto bg-orange-500 text-white px-8 py-3 rounded-full font-semibold text-lg hover:bg-orange-600 from-orange-400 to-orange-600">
+                        Belanja di Shopee
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Keunggulan Section -->
+        <section class="py-16" id="keunggulan">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="text-center mb-12">
+                      <h2 class="text-3xl md:text-4xl font-bold section-title">Keunggulan Kami</h2>
+                      <p class="mt-2 text-gray-600 section-subtitle">Alasan mengapa ratusan UMKM memercayakan kemasannya kepada kami.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center" id="benefit-grid">
+                    <div class="benefit-card bg-white p-8 rounded-lg shadow-lg fade-in-on-scroll" style="--stagger-delay: 0s;"><div class="bg-blue-100 text-blue-600 rounded-full h-20 w-20 flex items-center justify-center mx-auto mb-4 benefit-icon"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z" /></svg></div><h3 class="text-xl font-bold mb-2">Desain Suka-Suka GRATIS</h3><p class="text-gray-600">Tim desain siap membantu membuat kemasan menarik sesuai selera dan impian Anda.</p></div>
+                    <div class="benefit-card bg-white p-8 rounded-lg shadow-lg fade-in-on-scroll" style="--stagger-delay: 0.1s;"><div class="bg-blue-100 text-blue-600 rounded-full h-20 w-20 flex items-center justify-center mx-auto mb-4 benefit-icon"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-14L4 7m0 0v10l8 4m0-14L4 7" /></svg></div><h3 class="text-xl font-bold mb-2">Bisa Cetak Jumlah Kecil</h3><p class="text-gray-600">Mulai dari 500 pcs, cocok untuk UMKM yang baru mulai merintis bisnis.</p></div>
+                    <div class="benefit-card bg-white p-8 rounded-lg shadow-lg fade-in-on-scroll" style="--stagger-delay: 0.2s;"><div class="bg-blue-100 text-blue-600 rounded-full h-20 w-20 flex items-center justify-center mx-auto mb-4 benefit-icon"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg></div><h3 class="text-xl font-bold mb-2">Layanan Cepat</h3><p class="text-gray-600">Kami berdedikasi memberikan respons ramah dan proses cepat untuk kepuasan pelanggan.</p></div>
+                    <div class="benefit-card bg-white p-8 rounded-lg shadow-lg fade-in-on-scroll" style="--stagger-delay: 0.3s;"><div class="bg-blue-100 text-blue-600 rounded-full h-20 w-20 flex items-center justify-center mx-auto mb-4 benefit-icon"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.085a2 2 0 00-1.915 1.915L5 10m7 0a1 1 0 001 1h3.546l-1.09 2H9m4 0C9 13 8 14 7 14c-1.21 0-2.27-.596-3-1.5" /></svg></div><h3 class="text-xl font-bold mb-2">Dukungan Penuh Untuk UMKM</h3><p class="text-gray-600">Khusus mendukung UMKM naik kelas, kami memberikan penawaran terbaik.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Showcase Section -->
+        <section id="video-showcase" class="py-16 sm:py-24 bg-gray-100">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">Kualitas dalam Setiap Detail</h2>
+                    <p class="mt-2 text-gray-600 section-subtitle">Lihat bagaimana kami mengubah ide Anda menjadi kemasan yang sempurna.</p>
+                </div>
+                <div class="aspect-video rounded-lg overflow-hidden shadow-2xl fade-in-on-scroll border-4 border-white">
+                    <iframe src="https://www.youtube.com/embed/Ih-62_d-d4k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Produk Section -->
+        <section id="produk" class="py-20 bg-white">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">Produk Kemasan Kami</h2>
+                    <p class="mt-2 text-gray-600 section-subtitle">Berbagai pilihan kemasan untuk segala jenis kebutuhan bisnis Anda.</p>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6" id="product-grid">
+                    <!-- Isi produk sama seperti sebelumnya -->
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-200 fade-in-on-scroll" style="--stagger-delay: 0s;"><div class="aspect-square"><img src="https://placehold.co/400x400/e2e8f0/334155?text=Lunch+Box" alt="Lunch Box" class="w-full h-full object-cover"></div><div class="p-4"><h4 class="font-semibold text-center text-gray-700">Lunch Box</h4></div></div>
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-200 fade-in-on-scroll" style="--stagger-delay: 0.05s;"><div class="aspect-square"><img src="https://placehold.co/400x400/e2e8f0/334155?text=Dus+Sate" alt="Taichan" class="w-full h-full object-cover"></div><div class="p-4"><h4 class="font-semibold text-center text-gray-700">Dus Sate</h4></div></div>
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-200 fade-in-on-scroll" style="--stagger-delay: 0.1s;"><div class="aspect-square"><img src="https://placehold.co/400x400/e2e8f0/334155?text=Dus+Brownies" alt="Brownies" class="w-full h-full object-cover"></div><div class="p-4"><h4 class="font-semibold text-center text-gray-700">Dus Brownies</h4></div></div>
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-200 fade-in-on-scroll" style="--stagger-delay: 0.15s;"><div class="aspect-square"><img src="https://placehold.co/400x400/e2e8f0/334155?text=Donut+1pcs" alt="Donut 1pcs" class="w-full h-full object-cover"></div><div class="p-4"><h4 class="font-semibold text-center text-gray-700">Donut 1pcs</h4></div></div>
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-200 fade-in-on-scroll" style="--stagger-delay: 0.2s;"><div class="aspect-square"><img src="https://placehold.co/400x400/e2e8f0/334155?text=Donut+2pcs" alt="Donut 2pcs" class="w-full h-full object-cover"></div><div class="p-4"><h4 class="font-semibold text-center text-gray-700">Donut 2pcs</h4></div></div>
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-200 fade-in-on-scroll" style="--stagger-delay: 0.25s;"><div class="aspect-square"><img src="https://placehold.co/400x400/e2e8f0/334155?text=Donut+3pcs" alt="Donut 3pcs" class="w-full h-full object-cover"></div><div class="p-4"><h4 class="font-semibold text-center text-gray-700">Donut 3pcs</h4></div></div>
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-200 fade-in-on-scroll" style="--stagger-delay: 0.3s;"><div class="aspect-square"><img src="https://placehold.co/400x400/e2e8f0/334155?text=Donut+6pcs" alt="Donut 6pcs" class="w-full h-full object-cover"></div><div class="p-4"><h4 class="font-semibold text-center text-gray-700">Donut 6pcs</h4></div></div>
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-200 fade-in-on-scroll" style="--stagger-delay: 0.35s;"><div class="aspect-square"><img src="https://placehold.co/400x400/e2e8f0/334155?text=Fried+Chicken" alt="Fried Chicken" class="w-full h-full object-cover"></div><div class="p-4"><h4 class="font-semibold text-center text-gray-700">Fried Chicken</h4></div></div>
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-200 fade-in-on-scroll" style="--stagger-delay: 0.4s;"><div class="aspect-square"><img src="https://placehold.co/400x400/e2e8f0/334155?text=Dus+Roti+Bakar" alt="Dus Roti Bakar" class="w-full h-full object-cover"></div><div class="p-4"><h4 class="font-semibold text-center text-gray-700">Dus Roti Bakar</h4></div></div>
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-200 fade-in-on-scroll" style="--stagger-delay: 0.45s;"><div class="aspect-square"><img src="https://placehold.co/400x400/e2e8f0/334155?text=Dus+Burger" alt="Dus Burger" class="w-full h-full object-cover"></div><div class="p-4"><h4 class="font-semibold text-center text-gray-700">Dus Burger</h4></div></div>
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-200 fade-in-on-scroll" style="--stagger-delay: 0.5s;"><div class="aspect-square"><img src="https://placehold.co/400x400/e2e8f0/334155?text=Dus+Kebab" alt="Dus Kebab" class="w-full h-full object-cover"></div><div class="p-4"><h4 class="font-semibold text-center text-gray-700">Dus Kebab</h4></div></div>
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-200 fade-in-on-scroll" style="--stagger-delay: 0.55s;"><div class="aspect-square"><img src="https://placehold.co/400x400/e2e8f0/334155?text=Dus+FNB" alt="Dus FNB" class="w-full h-full object-cover"></div><div class="p-4"><h4 class="font-semibold text-center text-gray-700">Dus F&B Lainnya</h4></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3D MOCKUP VIEWER SECTION - UPDATED -->
+        <section id="mockup-viewer" class="py-20 bg-gray-100">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">Studio Desain Virtual Anda</h2>
+                    <p class="mt-2 text-gray-600 section-subtitle">Wujudkan ide kemasan Anda secara real-time. Atur setiap detail, tambahkan teks, dan langsung minta penawaran!</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                    <!-- Kontrol -->
+                    <div class="md:col-span-1 bg-white rounded-lg shadow-lg overflow-hidden">
+                        <!-- Accordion for controls -->
+                        <div id="accordion-container">
+                             <!-- Preset & Dimensi -->
+                            <button class="accordion-button active">
+                                <span>Ukuran & Presets</span>
+                                <svg class="w-5 h-5 accordion-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="accordion-content" style="display: block;">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label for="size-presets" class="control-label">Pilih Preset Ukuran</label>
+                                        <select id="size-presets">
+                                            <option value="custom">Ukuran Kustom</option>
+                                            <option value="18,10,7">Lunch Box M</option>
+                                            <option value="20,12,7.5">Lunch Box L</option>
+                                            <option value="22,10,5">Dus Martabak</option>
+                                            <option value="27,18.5,5.5">Dus Donat (Isi 6)</option>
+                                        </select>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-4">
+                                        <div><label for="custom-width" class="control-label">Panjang (cm)</label><input type="number" id="custom-width" value="20" min="5" max="50"></div>
+                                        <div><label for="custom-depth" class="control-label">Lebar (cm)</label><input type="number" id="custom-depth" value="12" min="5" max="50"></div>
+                                        <div><label for="custom-height" class="control-label">Tinggi (cm)</label><input type="number" id="custom-height" value="7" min="5" max="50"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Pengaturan Material -->
+                             <button class="accordion-button">
+                                <span>Pengaturan Material & Lingkungan</span>
+                                <svg class="w-5 h-5 accordion-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="accordion-content hidden">
+                                <div class="space-y-4">
+                                    <div><label for="material-select" class="control-label">Pilih Material</label><select id="material-select"><option value="ivory">Ivory / Art Carton (Putih)</option><option value="kraft">Kraft (Coklat)</option><option value="duplex">Duplex (Abu-abu)</option></select></div>
+                                    <div>
+                                        <label for="finishing-select" class="control-label">Pilih Finishing (Laminasi)</label>
+                                        <select id="finishing-select">
+                                            <option value="standar">Standar</option>
+                                            <option value="doff">Laminasi Doff (Matte)</option>
+                                            <option value="glossy">Laminasi Glossy (Mengkilap)</option>
+                                        </select>
+                                    </div>
+                                     <div class="pt-4 border-t">
+                                        <label class="control-label flex items-center"><input type="checkbox" id="food-grade-lining" class="mr-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">Laminasi Dalam (Food Grade)</label>
+                                    </div>
+                                    <div class="pt-4 border-t">
+                                        <label for="environment-select" class="control-label">Pilih Latar Belakang</label>
+                                        <select id="environment-select">
+                                            <option value="studio">Studio Abu-abu</option>
+                                            <option value="wood">Meja Kayu</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Pengaturan Konten -->
+                             <button class="accordion-button">
+                                <span>Pengaturan Konten (Stiker, Logo & Teks)</span>
+                                <svg class="w-5 h-5 accordion-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="accordion-content hidden">
+                                <p class="text-sm text-gray-500 mb-4">Klik langsung pada sisi kotak di pratinjau 3D untuk memilih dan mengeditnya.</p>
+                                <div class="space-y-4">
+                                    <div><label class="control-label">Sisi yang Dipilih</label><select id="content-side-select" class="w-full"></select></div>
+                                    <div>
+                                        <label class="control-label">Tipe Konten</label>
+                                        <div class="side-selector flex rounded-md overflow-hidden flex-wrap">
+                                            <input type="radio" id="content-type-none" name="content-type" value="none" checked><label for="content-type-none">Kosong</label>
+                                            <input type="radio" id="content-type-logo" name="content-type" value="logo"><label for="content-type-logo">Logo</label>
+                                            <input type="radio" id="content-type-text" name="content-type" value="text"><label for="content-type-text">Teks</label>
+                                            <input type="radio" id="content-type-sticker" name="content-type" value="sticker"><label for="content-type-sticker">Stiker</label>
+                                        </div>
+                                    </div>
+                                    <!-- Logo & Text & Sticker Controls -->
+                                    <div id="content-controls-container" class="hidden space-y-4 pt-4 border-t">
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div><label for="content-offset-x" class="control-label">Posisi X: <span id="offset-x-value">0</span>%</label><input id="content-offset-x" type="range" min="-50" max="50" step="1" value="0"></div>
+                                            <div><label for="content-offset-y" class="control-label">Posisi Y: <span id="offset-y-value">0</span>%</label><input id="content-offset-y" type="range" min="-50" max="50" step="1" value="0"></div>
+                                        </div>
+                                        
+                                        <!-- Sticker Specific -->
+                                        <div id="sticker-controls-container" class="hidden space-y-4">
+                                            <label class="control-label">Pilih Stiker</label>
+                                            <div class="grid grid-cols-4 gap-2">
+                                                <button class="sticker-btn p-2 border rounded hover:bg-blue-50 focus:ring-2 focus:ring-blue-500" data-sticker="halal" title="Halal">🟢</button>
+                                                <button class="sticker-btn p-2 border rounded hover:bg-blue-50 focus:ring-2 focus:ring-blue-500" data-sticker="recycle" title="Daur Ulang">♻️</button>
+                                                <button class="sticker-btn p-2 border rounded hover:bg-blue-50 focus:ring-2 focus:ring-blue-500" data-sticker="natural" title="100% Natural">🌿</button>
+                                                <button class="sticker-btn p-2 border rounded hover:bg-blue-50 focus:ring-2 focus:ring-blue-500" data-sticker="thankyou" title="Thank You">❤️</button>
+                                            </div>
+                                            <div><label for="sticker-scale-slider" class="control-label">Ukuran Stiker: <span id="sticker-scale-value">100</span>%</label><input id="sticker-scale-slider" type="range" min="0.2" max="1.5" step="0.05" value="1.0"></div>
+                                        </div>
+
+                                        <!-- Logo Specific -->
+                                        <div id="logo-controls-container" class="hidden space-y-4"><label for="logo-upload" class="w-full text-center py-2 px-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 flex items-center justify-center"><span>Unggah Logo</span></label><input id="logo-upload" type="file" class="hidden" accept="image/png, image/jpeg"><div><label for="logo-scale-slider" class="control-label">Ukuran Logo: <span id="logo-scale-value">100</span>%</label><input id="logo-scale-slider" type="range" min="0.2" max="1.5" step="0.05" value="1.0"></div></div>
+                                        
+                                        <!-- Text Specific -->
+                                        <div id="text-controls-container" class="hidden space-y-4">
+                                            <div><label for="text-input" class="control-label">Isi Teks</label><input type="text" id="text-input" placeholder="Tuliskan Sesuatu..."></div>
+                                            <div><label for="font-select" class="control-label">Jenis Huruf</label><select id="font-select"><option>Poppins</option><option>Arial</option><option>Verdana</option><option>Georgia</option><option>Times New Roman</option></select></div><div><label for="font-size-slider" class="control-label">Ukuran Huruf: <span id="font-size-value">48</span></label><input id="font-size-slider" type="range" min="16" max="128" step="1" value="48"></div></div>
+                                         <!-- Premium Finish -->
+                                        <div>
+                                            <label for="premium-finish-select" class="control-label">Finishing Premium</label>
+                                            <select id="premium-finish-select">
+                                                <option value="none">Tidak Ada</option>
+                                                <option value="emboss">Emboss (Timbul)</option>
+                                                <option value="deboss">Deboss (Tenggelam)</option>
+                                                <option value="foilEmas">Foil Emas</option>
+                                                <option value="foilPerak">Foil Perak</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Pengaturan Tampilan & Warna -->
+                            <button class="accordion-button">
+                                <span>Tampilan & Warna</span>
+                                <svg class="w-5 h-5 accordion-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="accordion-content hidden">
+                                <div class="space-y-4">
+                                    <div><label class="control-label">Warna Sisi & Teks</label><div class="grid grid-cols-2 gap-2"><div><input id="side-color-picker" type="color" value="#ffffff" class="w-full h-10 p-1 border rounded-md"><label for="side-color-picker" class="text-sm text-center block mt-1">Sisi</label></div><div><input id="text-color-picker" type="color" value="#333333" class="w-full h-10 p-1 border rounded-md"><label for="text-color-picker" class="text-sm text-center block mt-1">Teks</label></div></div></div>
+                                    <div>
+                                        <label for="pattern-select" class="control-label">Pola Desain</label>
+                                        <select id="pattern-select">
+                                            <option value="none">Tidak Ada</option>
+                                            <option value="stripes">Garis-garis (Stripes)</option>
+                                            <option value="polkadots">Polkadot</option>
+                                            <option value="checkered">Kotak-kotak (Checkered)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="pattern-color-picker" class="control-label">Warna Pola</label>
+                                        <div class="flex items-center">
+                                            <input id="pattern-color-picker" type="color" value="#e0e0e0" class="w-10 h-10 p-1 border rounded-md mr-2">
+                                            <span class="text-sm text-gray-600">Pilih warna untuk motif pola</span>
+                                        </div>
+                                    </div>
+                                    <div><label for="light-intensity-slider" class="control-label">Intensitas Cahaya: <span id="light-intensity-value">100</span>%</label><input id="light-intensity-slider" type="range" min="0.2" max="2.5" step="0.1" value="1.5"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Tombol Aksi & Fitur Baru -->
+                        <div class="p-4 bg-gray-50 space-y-4">
+                            <!-- Fitur Baru: Inspirasi Tema -->
+                            <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                                <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-3">Inspirasi Tema Cepat</p>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button onclick="applyTheme('eco')" class="flex flex-col items-center justify-center p-2 rounded-md hover:bg-green-50 transition border border-transparent hover:border-green-200">
+                                        <div class="w-6 h-6 rounded-full bg-[#b08a5f] mb-1"></div>
+                                        <span class="text-[10px] font-medium text-gray-600">Natural</span>
+                                    </button>
+                                    <button onclick="applyTheme('luxury')" class="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-50 transition border border-transparent hover:border-gray-200">
+                                        <div class="w-6 h-6 rounded-full bg-black mb-1 border border-gray-200"></div>
+                                        <span class="text-[10px] font-medium text-gray-600">Mewah</span>
+                                    </button>
+                                    <button onclick="applyTheme('fun')" class="flex flex-col items-center justify-center p-2 rounded-md hover:bg-pink-50 transition border border-transparent hover:border-pink-200">
+                                        <div class="w-6 h-6 rounded-full bg-pink-400 mb-1"></div>
+                                        <span class="text-[10px] font-medium text-gray-600">Ceria</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                             <button id="quote-button" class="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-full hover:bg-green-700 transition flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v5.05a2.5 2.5 0 014.9 0V8a1 1 0 00-1-1h-3z" /></svg>
+                                Minta Penawaran Harga
+                            </button>
+                            <button id="capture-button" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-full hover:bg-indigo-700 transition flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                Ambil Gambar
+                            </button>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button id="save-button" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-full hover:bg-blue-700 transition">Simpan</button>
+                                <button id="reset-button" class="w-full bg-red-600 text-white font-bold py-2 px-4 rounded-full hover:bg-red-700 transition">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Viewer -->
+                    <div class="md:col-span-2 relative">
+                        <div id="mockup-canvas-container" class="shadow-inner"></div>
+                         <div class="absolute top-4 right-4 flex space-x-2">
+                            <button id="animate-box-btn" class="bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-md hover:bg-white transition" title="Animasi Buka/Tutup">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0l7-4 7 4" /></svg>
+                            </button>
+                             <button id="ar-button" class="hidden bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-md hover:bg-white transition" title="Lihat di Ruangan Anda (AR)">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Tentang Kami & Portofolio Section -->
+        <section id="tentang" class="py-20 bg-white">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">Partner Terpercaya untuk Kemasan UMKM Anda</h2>
+                    <p class="mt-2 text-gray-600 max-w-3xl mx-auto section-subtitle">Sejak 2022, Percetakan Arjuna berkomitmen menjadi solusi kemasan berkualitas bagi para pelaku UMKM kuliner. Kami percaya bahwa kemasan yang baik adalah investasi untuk meningkatkan citra brand dan kepercayaan pelanggan.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
+                    <div class="about-card bg-white p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold mb-4">Kualitas Material Terbaik untuk Produk Anda</h3>
+                        <p class="text-gray-600 mb-4">Kami memahami setiap produk memiliki kebutuhan yang unik. Oleh karena itu, kami menyediakan beragam pilihan material premium untuk memastikan kemasan Anda tidak hanya menarik secara visual, tetapi juga fungsional dan aman.</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span><span class="font-semibold">Ivory & Art Carton:</span> Memberikan kesan mewah dan kokoh, ideal untuk produk premium.</span></li>
+                            <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span><span class="font-semibold">Kraft & Duplex:</span> Pilihan ramah lingkungan dan ekonomis dengan tampilan natural yang otentik.</span></li>
+                             <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span><span class="font-semibold">Laminasi Dalam (Food Grade):</span> Menjaga ketahanan produk dari minyak atau air, memastikan kualitas makanan tetap terjaga hingga ke tangan konsumen.</span></li>
+                        </ul>
+                    </div>
+                    <div class="about-card grid grid-cols-2 gap-6" id="stats-section">
+                          <div class="text-center bg-white p-6 rounded-lg shadow-lg stat-card"><p class="text-4xl font-bold text-blue-600 counter-value" data-target="3">0</p><p class="text-gray-600 mt-1">Tahun Pengalaman</p></div>
+                          <div class="text-center bg-white p-6 rounded-lg shadow-lg stat-card"><p class="text-4xl font-bold text-blue-600 counter-value" data-target="700">0</p><p class="text-gray-600 mt-1">Klien Puas</p></div>
+                          <div class="text-center bg-white p-6 rounded-lg shadow-lg col-span-2 stat-card"><p class="text-4xl font-bold text-blue-600 counter-value" data-target="9.8">0</p><p class="text-gray-600 mt-1">Rating Pelanggan</p></div>
+                    </div>
+                </div>
+
+                <!-- Bagian untuk Herbal & Kosmetik -->
+                <div class="text-center my-16 py-12 px-6 bg-white rounded-lg shadow-lg border border-blue-100 premium-card">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-4">Kemasan Premium untuk Brand Herbal & Kosmetik Anda</h3>
+                    <p class="mt-4 text-gray-600 max-w-4xl mx-auto text-base md:text-lg">Di industri herbal dan kosmetik, kemasan adalah faktor penentu. Kemasan yang tepat tidak hanya melindungi produk, tetapi juga membangun <strong>kepercayaan pelanggan</strong> dan menciptakan <strong>citra brand yang kuat</strong>. Inilah yang akan membedakan produk Anda di tengah persaingan.</p>
+                    <p class="mt-4 text-gray-600 max-w-4xl mx-auto text-base md:text-lg">Kami di Percetakan Arjuna menerapkan standar presisi dan kualitas tinggi untuk membantu brand Anda tampil profesional. Pilih dari material terbaik seperti <strong>Ivory</strong> dan <strong>Art Carton</strong> untuk kesan kokoh dan premium. Tambahkan sentuhan akhir yang eksklusif dengan teknik <strong>finishing</strong> seperti <span class="italic">hot foil, emboss,</span> atau <span class="italic">spot UV</span> untuk memastikan produk Anda menjadi pusat perhatian.</p>
+                    <p class="mt-6 text-gray-700 max-w-4xl mx-auto text-base md:text-lg font-semibold">Mari wujudkan kemasan yang merepresentasikan kualitas produk Anda. Diskusikan ide Anda dengan kami sekarang.</p>
+                </div>
+
+                <!-- KLIEN KAMI (3D FLIP CARDS) -->
+        <section id="klien" class="py-20 bg-white">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">Klien Kami</h2>
+                    <p class="mt-2 text-gray-600">Arahkan kursor pada logo untuk melihat hasil cetak kemasan asli.</p>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+                    
+                    <!-- Card 1 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+A" alt="Logo A" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/1e293b/ffffff?text=Produk+A" alt="Produk A">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Kopi Senja</h4>
+                                    <p class="text-xs opacity-80">Box Standing Pouch</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+B" alt="Logo B" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/ec4899/ffffff?text=Produk+B" alt="Produk B">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Donat Lumer</h4>
+                                    <p class="text-xs opacity-80">Box Isi 6</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+C" alt="Logo C" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/eab308/ffffff?text=Produk+C" alt="Produk C">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Keripik Mantap</h4>
+                                    <p class="text-xs opacity-80">Pouch Foil</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+D" alt="Logo D" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/22c55e/ffffff?text=Produk+D" alt="Produk D">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Salad Segar</h4>
+                                    <p class="text-xs opacity-80">Bowl Paper</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+E" alt="Logo E" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/6366f1/ffffff?text=Produk+E" alt="Produk E">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Bakpia Pathok</h4>
+                                    <p class="text-xs opacity-80">Slide Box</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 6 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+F" alt="Logo F" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/f97316/ffffff?text=Produk+F" alt="Produk F">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Fried Chicken</h4>
+                                    <p class="text-xs opacity-80">Paper Box L</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 7 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+G" alt="Logo G" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/ef4444/ffffff?text=Produk+G" alt="Produk G">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Sambal Nyot</h4>
+                                    <p class="text-xs opacity-80">Label Jar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 8 -->
+                    <div class="flip-card group">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front shadow-sm group-hover:shadow-md transition">
+                                <img src="https://placehold.co/150x150/ffffff/333333?text=Brand+H" alt="Logo H" class="w-24 h-24 object-contain">
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="https://placehold.co/400x400/8b5cf6/ffffff?text=Produk+H" alt="Produk H">
+                                <div class="flip-content-overlay">
+                                    <h4 class="font-bold text-sm">Glow Skincare</h4>
+                                    <p class="text-xs opacity-80">Hardbox Premium</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        
+        <!-- Testimoni Section (2D Infinite Marquee) -->
+        <section id="testimoni" class="py-20 bg-gradient-to-b from-white to-blue-50 overflow-hidden">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">Apa Kata Mereka?</h2>
+                    <p class="mt-2 text-gray-600 section-subtitle">Kepuasan pelanggan adalah prioritas utama kami.</p>
+                </div>
+                
+                <div class="testimonial-marquee-container">
+                    <div class="testimonial-track">
+                        <!-- Testimoni 1 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-xl font-bold text-blue-600 shadow-sm">B</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Budi Santoso</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Kopi Senja"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Hasil cetaknya tajam banget, bahannya juga kokoh. Pas banget buat packaging kopi saya. Pelayanan ramah dan cepat!"</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 2 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-pink-100 flex items-center justify-center text-xl font-bold text-pink-600 shadow-sm">S</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Siti Aminah</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Donat Lumer"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Suka banget sama fitur desain 3D di websitenya, jadi bisa bayangin dulu sebelum cetak. Hasil aslinya sesuai ekspektasi."</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 3 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center text-xl font-bold text-green-600 shadow-sm">R</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Rizky Pratama</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">UMKM "Keripik Mantap"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Harganya bersaing tapi kualitasnya premium. Pengiriman juga aman sampai ke Jakarta. Recommended!"</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 4 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center text-xl font-bold text-purple-600 shadow-sm">A</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Andi Wijaya</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Snack Kriuk"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Desain customnya sangat membantu branding produk saya. Penjualan meningkat sejak ganti kemasan di sini."</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 5 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center text-xl font-bold text-orange-600 shadow-sm">D</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Dewi Lestari</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Kue Basah Bu Dewi"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Pelayanan sangat memuaskan, admin fast respon dan sangat membantu. Kualitas cetakan juga oke banget."</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+
+                        <!-- DUPLICATED CARDS FOR SEAMLESS LOOP -->
+                        <!-- Testimoni 1 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-xl font-bold text-blue-600 shadow-sm">B</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Budi Santoso</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Kopi Senja"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Hasil cetaknya tajam banget, bahannya juga kokoh. Pas banget buat packaging kopi saya. Pelayanan ramah dan cepat!"</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 2 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-pink-100 flex items-center justify-center text-xl font-bold text-pink-600 shadow-sm">S</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Siti Aminah</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Donat Lumer"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Suka banget sama fitur desain 3D di websitenya, jadi bisa bayangin dulu sebelum cetak. Hasil aslinya sesuai ekspektasi."</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 3 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center text-xl font-bold text-green-600 shadow-sm">R</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Rizky Pratama</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">UMKM "Keripik Mantap"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Harganya bersaing tapi kualitasnya premium. Pengiriman juga aman sampai ke Jakarta. Recommended!"</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 4 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center text-xl font-bold text-purple-600 shadow-sm">A</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Andi Wijaya</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Snack Kriuk"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Desain customnya sangat membantu branding produk saya. Penjualan meningkat sejak ganti kemasan di sini."</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                        <!-- Testimoni 5 -->
+                        <div class="testimonial-card-2d">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center text-xl font-bold text-orange-600 shadow-sm">D</div>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-gray-800">Dewi Lestari</h4>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wider">Owner "Kue Basah Bu Dewi"</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm italic leading-relaxed">"Pelayanan sangat memuaskan, admin fast respon dan sangat membantu. Kualitas cetakan juga oke banget."</p>
+                            <div class="mt-4 flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- FAQ Section (NEW) -->
+        <section id="faq" class="py-20 bg-white">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">Pertanyaan Umum (FAQ)</h2>
+                    <p class="mt-2 text-gray-600 section-subtitle">Jawaban untuk pertanyaan yang sering diajukan pelanggan kami.</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+                        <button class="accordion-button flex justify-between items-center w-full px-6 py-4 bg-white text-left font-semibold hover:bg-gray-50 focus:outline-none">
+                            <span>Berapa minimal order (MOQ) di Percetakan Arjuna?</span>
+                            <svg class="w-5 h-5 accordion-arrow transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="accordion-content px-6 py-4 text-gray-600 hidden">
+                            Minimal pemesanan kami mulai dari 500 pcs untuk kemasan custom. Ini sangat cocok untuk UMKM yang baru memulai usaha dan tidak ingin menimbun stok terlalu banyak.
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+                        <button class="accordion-button flex justify-between items-center w-full px-6 py-4 bg-white text-left font-semibold hover:bg-gray-50 focus:outline-none">
+                            <span>Berapa lama proses produksi kemasan?</span>
+                            <svg class="w-5 h-5 accordion-arrow transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="accordion-content px-6 py-4 text-gray-600 hidden">
+                            Estimasi waktu produksi standar adalah 7-14 hari kerja setelah desain disetujui (ACC). Waktu bisa bervariasi tergantung antrian dan kompleksitas finishing (misal: hot foil atau emboss membutuhkan waktu tambahan).
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+                        <button class="accordion-button flex justify-between items-center w-full px-6 py-4 bg-white text-left font-semibold hover:bg-gray-50 focus:outline-none">
+                            <span>Apakah bisa bantu desainkan kemasan?</span>
+                            <svg class="w-5 h-5 accordion-arrow transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="accordion-content px-6 py-4 text-gray-600 hidden">
+                            Tentu! Kami menyediakan layanan desain GRATIS untuk setiap pemesanan cetak kemasan. Tim desainer kami akan membantu mewujudkan visi brand Anda.
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+                        <button class="accordion-button flex justify-between items-center w-full px-6 py-4 bg-white text-left font-semibold hover:bg-gray-50 focus:outline-none">
+                            <span>Apakah melayani pengiriman ke luar kota?</span>
+                            <svg class="w-5 h-5 accordion-arrow transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="accordion-content px-6 py-4 text-gray-600 hidden">
+                            Ya, kami melayani pengiriman ke seluruh Indonesia menggunakan berbagai ekspedisi terpercaya (JNE, J&T, Cargo, dll) dengan packing aman.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kontak & CTA Section -->
+        <section id="kontak" class="bg-blue-600 text-white">
+            <div class="container mx-auto px-6 py-20 text-center max-w-7xl">
+                <h2 class="text-3xl md:text-4xl font-bold">Siap Meningkatkan Nilai Jual Produk Anda?</h2>
+                <p class="mt-4 text-lg text-blue-100 max-w-3xl mx-auto">Kemasan bukan hanya pembungkus, tapi cerminan kualitas brand Anda. Jangan biarkan produk hebat Anda tampil biasa saja. Tim kami siap membantu Anda membuat desain yang menarik perhatian dan meningkatkan penjualan.</p>
+                <div class="mt-10">
+                    <p class="text-xl font-semibold text-white">Hubungi kami sekarang untuk konsultasi gratis!</p>
+                    <div class="mt-6">
+                        <a href="https://wa.me/6282226903074?text=Halo%20Percetakan%20Arjuna,%20saya%20ingin%20konsultasi%20mengenai%20cetak%20kemasan%20untuk%20bisnis%20saya." target="_blank" class="cta-button inline-block bg-white text-blue-600 px-8 sm:px-10 py-3 sm:py-4 rounded-full font-bold text-lg hover:bg-gray-100 from-blue-100 to-white">Chat Sekarang via WhatsApp</a>
+                    </div>
+                    <p class="mt-3 text-sm text-blue-200">Klik untuk langsung terhubung dengan tim kami.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Google Maps Section -->
+        <section id="lokasi" class="py-20 bg-white">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">Temukan Lokasi Kami</h2>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto section-subtitle">Dusun Nglarang No.44, RT.05/RW.35, Jetis, Wedomartani, Kec. Ngemplak, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55584</p>
+                </div>
+                <div class="overflow-hidden rounded-lg shadow-xl map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.284755836035!2d110.4186406758681!3d-7.75949439225708!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a597352f9e5e7%3A0x819492d100bff3cb!2sPercetakan%20Arjuna!5e0!3m2!1sid!2sid" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-16 pb-8">
+        <div class="container mx-auto px-6 max-w-7xl">
+            <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-800 pb-8 mb-8">
+                <div class="text-center md:text-left mb-6 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-2 text-white">Percetakan Arjuna</h3>
+                    <p class="text-gray-400">Solusi Kemasan UMKM Terpercaya</p>
+                    <p class="text-gray-500 text-sm mt-1">Dusun Nglarang No.44, RT.05/RW.35, Wedomartani, Sleman</p>
+                </div>
+                <div class="flex space-x-8">
+                    <a href="https://wa.me/6282226903074" target="_blank" class="text-gray-400 hover:text-white transition-colors duration-300">WhatsApp</a>
+                    <a href="https://shopee.co.id/percetakan_arjuna?entryPoint=ShopBySearch&searchKeyword=percetakan%20arjuna" target="_blank" class="text-gray-400 hover:text-white transition-colors duration-300">Shopee</a>
+                    <a href="#tentang" class="text-gray-400 hover:text-white transition-colors duration-300">Tentang Kami</a>
+                </div>
+            </div>
+            
+            <!-- Modern Developer Credit Section (Luxurious & Credible) -->
+            <div class="flex flex-col items-center justify-center">
+                <p class="text-gray-600 text-xs mb-4 uppercase tracking-widest">&copy; 2025 Percetakan Arjuna. All Rights Reserved.</p>
+                
+                <a href="#" class="dev-badge group" title="Klik untuk bekerja sama">
+                    <div class="dev-avatar">
+                        <!-- Placeholder Avatar (Initials) -->
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center text-white font-bold text-xs border border-gray-600">DZ</div>
+                        <div class="dev-status-dot"></div>
+                    </div>
+                    <div class="flex flex-col items-start">
+                        <span class="dev-role">Designed & Developed by</span>
+                        <span class="dev-name">Dhiya'Ulhag Zulfa Zain</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="to-top-button" title="Go to top" class="hidden fixed z-50 bottom-10 right-10 p-4 border-0 w-14 h-14 rounded-full shadow-md bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold transition-all duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" /></svg>
+    </button>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/6282226903074?text=Halo%20Percetakan%20Arjuna,%20saya%20tertarik%20dengan%20layanan%20Anda." target="_blank" title="Chat di WhatsApp" class="fixed z-50 bottom-10 left-10 p-4 w-16 h-16 rounded-full shadow-lg bg-green-500 hover:bg-green-600 text-white flex items-center justify-center transition-transform duration-300 hover:scale-110 floating-whatsapp">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 4.315 1.731 6.086l.001.004 1.64-5.993a.536.536 0 0 1 .524-.438h.004a.532.532 0 0 1 .433.26z"/></svg>
+    </a>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Modal untuk pesan kesalahan -->
+    <div id="modal-container" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-[999] hidden"><div class="bg-white p-6 rounded-lg shadow-xl text-center"><p class="text-gray-800 text-lg font-semibold mb-4">Mohon maaf, aksi penyalinan konten tidak diizinkan.</p><button id="modal-close-btn" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">Tutup</button></div></div>
+    
+    <!-- Modal untuk Load Session -->
+    <div id="load-session-modal" class="hidden modal fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[1000] opacity-0"><div class="bg-white p-8 rounded-lg shadow-2xl text-center max-w-sm mx-4"><h3 class="text-xl font-bold mb-4">Desain Ditemukan</h3><p class="text-gray-600 mb-6">Kami menemukan desain yang telah Anda simpan sebelumnya. Apakah Anda ingin melanjutkannya?</p><div class="flex justify-center space-x-4"><button id="load-yes-btn" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-700 transition">Ya, Lanjutkan</button><button id="load-no-btn" class="bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-full hover:bg-gray-300 transition">Mulai Baru</button></div></div></div>
+
+    <!-- Modal untuk Minta Penawaran (Simplified) -->
+    <div id="quote-modal" class="hidden modal fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[1000] opacity-0">
+        <div class="bg-white p-8 rounded-lg shadow-2xl max-w-lg mx-4 w-full">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Minta Penawaran Harga</h3>
+                <button id="quote-close-btn" class="text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button>
+            </div>
+            <p class="text-gray-600 mb-4">Lengkapi data berikut untuk konfirmasi pemesanan via WhatsApp.</p>
+            <form id="quote-form" class="space-y-4">
+                <div><label for="quote-name" class="control-label">Nama Anda</label><input type="text" id="quote-name" required class="w-full"></div>
+                <div><label for="quote-whatsapp" class="control-label">No. WhatsApp</label><input type="tel" id="quote-whatsapp" required class="w-full" placeholder="62..."></div>
+                <div>
+                    <label for="quote-quantity" class="control-label">Jumlah Pesanan (pcs)</label>
+                    <select id="quote-quantity" class="w-full p-2 border rounded-md border-gray-300">
+                        <option value="500">500 pcs</option>
+                        <option value="1000">1.000 pcs</option>
+                        <option value="2000">2.000 pcs</option>
+                        <option value="5000">5.000 pcs</option>
+                        <option value="10000">10.000+ pcs</option>
+                    </select>
+                </div>
+                <div class="bg-gray-50 p-3 rounded text-sm text-gray-600">
+                    Detail spesifikasi desain akan otomatis terlampir saat Anda mengirim pesan.
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 rounded-full hover:bg-green-700 transition shadow-lg mt-4 flex justify-center items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 4.315 1.731 6.086l.001.004 1.64-5.993a.536.536 0 0 1 .524-.438h.004a.532.532 0 0 1 .433.26z"/></svg>
+                    Kirim Pesanan via WhatsApp
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Gemini Tagline Modal -->
+    <div id="gemini-modal" class="hidden modal fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-[1001] opacity-0">
+        <div class="bg-white p-8 rounded-lg shadow-2xl max-w-lg mx-4 w-full">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Ide Tagline dari AI</h3>
+                <button id="gemini-close-btn" class="text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button>
+            </div>
+            <div id="gemini-prompt-view">
+                <p class="text-gray-600 mb-4">Masukkan jenis produk Anda (misal: kopi, donat, kue kering) untuk mendapatkan ide tagline.</p>
+                <form id="gemini-form" class="flex space-x-2">
+                    <input type="text" id="gemini-product-type" placeholder="Contoh: Kopi Gayo" required class="w-full">
+                    <button type="submit" class="bg-purple-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-700 transition">Buat!</button>
+                </form>
+            </div>
+            <div id="gemini-results-view" class="hidden">
+                 <div id="gemini-loading" class="text-center">
+                    <p class="text-gray-600">Mencari ide...</p>
+                 </div>
+                 <div id="gemini-results-list" class="space-y-2">
+                    <!-- Results will be injected here -->
+                 </div>
+                 <button id="gemini-back-btn" class="mt-4 text-sm text-gray-500 hover:text-gray-800">Kembali</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- SCRIPT UTAMA ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Script untuk Animasi Hero Text (Kata per Kata)
+            const heroTitleContainer = document.getElementById('hero-title-container');
+            if (heroTitleContainer) {
+                const heroTextParts = ['Wujudkan', '<span class="text-blue-600 hero-title-highlight">Kemasan Impian</span>', 'Bisnis Anda'];
+                heroTitleContainer.innerHTML = '';
+                heroTextParts.forEach((part, index) => {
+                    const span = document.createElement('span');
+                    span.classList.add('hero-text-word');
+                    span.innerHTML = part + ' ';
+                    span.style.transitionDelay = `${index * 0.2}s`;
+                    heroTitleContainer.appendChild(span);
+                    setTimeout(() => {
+                        span.style.opacity = '1';
+                        span.style.transform = 'translateY(0)';
+                    }, 50);
+                });
+            }
+
+            // Script untuk Menu Mobile
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (menuBtn) menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+            // Script untuk Header Scroll
+            const header = document.getElementById('header');
+            if (header) window.addEventListener('scroll', () => {
+                header.classList.toggle('header-scrolled', window.scrollY > 50);
+            });
+
+            // Script untuk Tombol Scroll to Top
+            const mybutton = document.getElementById("to-top-button");
+            if (mybutton) {
+                window.onscroll = () => {
+                    mybutton.classList.toggle("hidden", document.body.scrollTop <= 100 && document.documentElement.scrollTop <= 100);
+                };
+                mybutton.addEventListener("click", () => window.scrollTo({top: 0, behavior: 'smooth'}));
+            }
+            
+            // Script untuk Animasi Ripple pada CTA
+            document.querySelectorAll('.cta-button').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    this.querySelectorAll('.ripple').forEach(r => r.remove());
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    ripple.style.left = `${e.clientX - rect.left}px`;
+                    ripple.style.top = `${e.clientY - rect.top}px`;
+                    ripple.style.width = ripple.style.height = `${Math.max(rect.width, rect.height)}px`;
+                    ripple.classList.add('ripple');
+                    this.appendChild(ripple);
+                });
+            });
+
+            // Script untuk mencegah penyalinan konten
+            const modal = document.getElementById('modal-container');
+            const closeModalBtn = document.getElementById('modal-close-btn');
+            if (modal) {
+                const showModal = () => modal.classList.remove('hidden');
+                closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
+                document.addEventListener('contextmenu', e => { e.preventDefault(); showModal(); });
+                document.addEventListener('keydown', e => { if (e.ctrlKey && (e.key === 'c' || e.key === 'x')) { e.preventDefault(); showModal(); } });
+            }
+            
+            // Animasi fade-in on scroll (untuk stagger effect)
+            const faders = document.querySelectorAll('.fade-in-on-scroll');
+            if (faders.length > 0) {
+                const appearOnScroll = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const delay = parseFloat(entry.target.style.getPropertyValue('--stagger-delay')) || 0;
+                            setTimeout(() => entry.target.classList.add('is-visible'), delay * 1000);  
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                faders.forEach(fader => appearOnScroll.observe(fader));
+            }
+
+            // Script untuk Animasi Counter
+            const counterSection = document.getElementById('stats-section');
+            if (counterSection) {
+                let counterExecuted = false;
+                const counterObserver = new IntersectionObserver((entries, observer) => {
+                    if (entries[0].isIntersecting && !counterExecuted) {
+                        document.querySelectorAll('.counter-value').forEach(el => {
+                            const target = parseFloat(el.getAttribute('data-target'));
+                            const isFloat = target % 1 !== 0;
+                            const duration = 2000;
+                            let startTimestamp = null;
+                            const step = (timestamp) => {
+                                if (!startTimestamp) startTimestamp = timestamp;
+                                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                                let value = progress * target;
+                                el.textContent = isFloat ? value.toFixed(1) : Math.floor(value);
+                                if (progress < 1) window.requestAnimationFrame(step);
+                                else el.textContent = isFloat ? target.toFixed(1) : target;
+                            };
+                            window.requestAnimationFrame(step);
+                        });
+                        counterExecuted = true;
+                        observer.unobserve(counterSection);
+                    }
+                }, { threshold: 0.5 });
+                counterObserver.observe(counterSection);
+            }
+
+            // Script untuk Navigasi Aktif Otomatis
+            const sections = document.querySelectorAll('main section[id], #kontak');
+            const navLinks = document.querySelectorAll('.nav-link');
+            if (sections.length > 0) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const sectionId = entry.target.getAttribute('id');
+                            navLinks.forEach(link => {
+                                link.classList.toggle('text-blue-600', link.getAttribute('data-section') === sectionId);
+                                link.classList.toggle('font-semibold', link.getAttribute('data-section') === sectionId);
+                                link.classList.toggle('text-gray-600', link.getAttribute('data-section') !== sectionId);
+                            });
+                        }
+                    });
+                }, { rootMargin: '0px', threshold: 0.5 });
+                sections.forEach(section => observer.observe(section));
+            }
+            
+            // Script untuk memutar ikon saat diklik
+            document.querySelectorAll('.benefit-icon').forEach(icon => {
+                icon.addEventListener('click', () => {
+                    icon.classList.add('is-spinning');
+                    setTimeout(() => icon.classList.remove('is-spinning'), 500);
+                });
+            });
+
+            // Accordion Logic (Shared for 3D Viewer & FAQ)
+            document.querySelectorAll('.accordion-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const content = button.nextElementSibling;
+                    const arrow = button.querySelector('.accordion-arrow');
+                    
+                    // Simple Toggle logic
+                    const isActive = !content.classList.contains('hidden');
+                    
+                    if (isActive) {
+                        content.classList.add('hidden');
+                        if(arrow) arrow.style.transform = 'rotate(0deg)';
+                    } else {
+                        content.classList.remove('hidden');
+                        if(arrow) arrow.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+
+            // --- TOAST NOTIFICATION FUNCTION ---
+            function showToast(message, type = 'success') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                
+                let icon = '';
+                if (type === 'success') icon = '<svg class="w-6 h-6 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>';
+                else if (type === 'error') icon = '<svg class="w-6 h-6 text-red-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>';
+                else icon = '<svg class="w-6 h-6 text-blue-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+
+                toast.innerHTML = `
+                    <div class="flex items-center">
+                        ${icon}
+                        <span class="font-medium text-gray-800">${message}</span>
+                    </div>
+                `;
+
+                container.appendChild(toast);
+
+                // Auto remove
+                setTimeout(() => {
+                    toast.style.animation = 'fadeOut 0.3s ease-out forwards';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+
+            // --- SCRIPT 3D MOCKUP VIEWER ---
+            const mockupSection = document.getElementById('mockup-viewer');
+            if (mockupSection && typeof THREE !== 'undefined' && typeof THREE.OrbitControls !== 'undefined') {
+                const ui = { 
+                    container: document.getElementById('mockup-canvas-container'), 
+                    sizePresets: document.getElementById('size-presets'), 
+                    customWidth: document.getElementById('custom-width'), 
+                    customHeight: document.getElementById('custom-height'), 
+                    customDepth: document.getElementById('custom-depth'), 
+                    materialSelect: document.getElementById('material-select'), 
+                    finishingSelect: document.getElementById('finishing-select'), 
+                    foodGradeLining: document.getElementById('food-grade-lining'), 
+                    environmentSelect: document.getElementById('environment-select'), 
+                    sideColorPicker: document.getElementById('side-color-picker'), 
+                    contentSideSelect: document.getElementById('content-side-select'), 
+                    contentTypeRadios: document.querySelectorAll('input[name="content-type"]'), 
+                    contentControls: document.getElementById('content-controls-container'), 
+                    logoControls: document.getElementById('logo-controls-container'), 
+                    textControls: document.getElementById('text-controls-container'), 
+                    stickerControls: document.getElementById('sticker-controls-container'),
+                    logoUpload: document.getElementById('logo-upload'), 
+                    logoScaleSlider: document.getElementById('logo-scale-slider'), 
+                    logoScaleValue: document.getElementById('logo-scale-value'), 
+                    stickerScaleSlider: document.getElementById('sticker-scale-slider'), 
+                    stickerScaleValue: document.getElementById('sticker-scale-value'), 
+                    textInput: document.getElementById('text-input'), 
+                    fontSelect: document.getElementById('font-select'), 
+                    fontSizeSlider: document.getElementById('font-size-slider'), 
+                    fontSizeValue: document.getElementById('font-size-value'), 
+                    textColorPicker: document.getElementById('text-color-picker'), 
+                    premiumFinishSelect: document.getElementById('premium-finish-select'), 
+                    contentOffsetX: document.getElementById('content-offset-x'), 
+                    contentOffsetY: document.getElementById('content-offset-y'), 
+                    offsetXValue: document.getElementById('offset-x-value'), 
+                    offsetYValue: document.getElementById('offset-y-value'), 
+                    lightIntensitySlider: document.getElementById('light-intensity-slider'), 
+                    lightIntensityValue: document.getElementById('light-intensity-value'), 
+                    animateBoxBtn: document.getElementById('animate-box-btn'), 
+                    captureButton: document.getElementById('capture-button'), 
+                    arButton: document.getElementById('ar-button'), 
+                    quoteButton: document.getElementById('quote-button'), 
+                    saveButton: document.getElementById('save-button'), 
+                    resetButton: document.getElementById('reset-button'), 
+                    loadModal: document.getElementById('load-session-modal'), 
+                    loadYesBtn: document.getElementById('load-yes-btn'), 
+                    loadNoBtn: document.getElementById('load-no-btn'), 
+                    quoteModal: document.getElementById('quote-modal'), 
+                    quoteForm: document.getElementById('quote-form'), 
+                    quoteCloseBtn: document.getElementById('quote-close-btn'), 
+                    quoteQuantity: document.getElementById('quote-quantity'),
+                    patternSelect: document.getElementById('pattern-select'),
+                    patternColorPicker: document.getElementById('pattern-color-picker'),
+                    stickerBtns: document.querySelectorAll('.sticker-btn'),
+                    
+                    // Gemini UI elements
+                    geminiModal: document.getElementById('gemini-modal'), 
+                    geminiCloseBtn: document.getElementById('gemini-close-btn'), 
+                    geminiTaglineBtn: document.getElementById('gemini-tagline-btn'), 
+                    geminiForm: document.getElementById('gemini-form'), 
+                    geminiProductType: document.getElementById('gemini-product-type'), 
+                    geminiPromptView: document.getElementById('gemini-prompt-view'), 
+                    geminiResultsView: document.getElementById('gemini-results-view'), 
+                    geminiLoading: document.getElementById('gemini-loading'), 
+                    geminiResultsList: document.getElementById('gemini-results-list'), 
+                    geminiBackBtn: document.getElementById('gemini-back-btn'),
+                };
+                
+                let scene, camera, renderer, boxGroup, controls, envMap, groundPlane, composer, outlinePass, saoPass, lidPivot;
+                let textures = {};
+                const sideNames = ["Tutup Atas", "Dasar", "Depan", "Belakang", "Kanan", "Kiri"];
+                let boxParts = []; 
+                let selectedPart = null;
+                let logoImage = null; 
+                
+                // Default state with sticker support
+                const defaultState = { 
+                    width: 20, 
+                    height: 7, 
+                    depth: 12, 
+                    material: 'ivory', 
+                    finishing: 'standar', 
+                    foodGradeLining: false, 
+                    environment: 'studio', 
+                    lightIntensity: 1.5, 
+                    sideProperties: sideNames.map(() => ({ 
+                        color: '#ffffff', 
+                        contentType: 'none', // 'none', 'logo', 'text', 'sticker'
+                        stickerType: '', // 'halal', 'recycle', 'natural', 'thankyou'
+                        premiumFinish: 'none', 
+                        logoScale: 1.0, 
+                        stickerScale: 1.0,
+                        text: 'Teks Anda', 
+                        font: 'Poppins', 
+                        fontSize: 48, 
+                        textColor: '#333333', 
+                        offsetX: 0, 
+                        offsetY: 0,
+                        patternType: 'none',
+                        patternColor: '#e0e0e0'
+                    })) 
+                };
+                let state = JSON.parse(JSON.stringify(defaultState));
+
+                // --- THEME LOGIC ---
+                window.applyTheme = function(theme) {
+                    if (theme === 'eco') {
+                        state.material = 'kraft';
+                        state.finishing = 'standar';
+                        state.sideProperties.forEach(p => {
+                            p.color = '#b08a5f';
+                            p.patternType = 'none';
+                            p.textColor = '#333333';
+                            p.premiumFinish = 'none'; 
+                        });
+                        showToast('Tema Natural diterapkan!', 'success');
+                    } else if (theme === 'luxury') {
+                        state.material = 'ivory';
+                        state.finishing = 'glossy';
+                        state.sideProperties.forEach(p => {
+                            p.color = '#1a1a1a'; 
+                            p.patternType = 'none';
+                            p.textColor = '#FFD700'; 
+                            p.premiumFinish = 'foilEmas';
+                        });
+                        showToast('Tema Mewah diterapkan!', 'success');
+                    } else if (theme === 'fun') {
+                        state.material = 'ivory';
+                        state.finishing = 'doff';
+                        state.sideProperties.forEach(p => {
+                            p.color = '#ffffff';
+                            p.patternType = 'polkadots';
+                            p.patternColor = '#f472b6'; 
+                            p.textColor = '#333333';
+                            p.premiumFinish = 'none'; 
+                        });
+                        showToast('Tema Ceria diterapkan!', 'success');
+                    }
+                    updateUIFromState();
+                    updateBoxModel();
+                };
+                
+                function init3D() {
+                    // (Same init code as before)
+                    scene = new THREE.Scene();
+                    scene.background = new THREE.Color(0xdde2e8);
+                    scene.fog = new THREE.Fog(0xdde2e8, 10, 30);
+
+                    camera = new THREE.PerspectiveCamera(50, ui.container.clientWidth / ui.container.clientHeight, 0.1, 1000);
+                    camera.position.set(2.5, 2, 4);
+                    
+                    renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+                    renderer.setSize(ui.container.clientWidth, ui.container.clientHeight);
+                    renderer.setPixelRatio(window.devicePixelRatio);
+                    renderer.shadowMap.enabled = true;
+                    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                    renderer.outputEncoding = THREE.sRGBEncoding;
+                    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                    ui.container.appendChild(renderer.domElement);
+                    
+                    controls = new THREE.OrbitControls(camera, renderer.domElement);
+                    controls.enableDamping = true;
+                    controls.dampingFactor = 0.05;
+                    controls.minDistance = 2;
+                    controls.maxDistance = 15;
+                    controls.target.set(0, 0, 0);
+                    
+                    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
+                    hemiLight.position.set(0, 20, 0);
+                    scene.add(hemiLight);
+
+                    const mainLight = new THREE.DirectionalLight(0xffffff, 1.0);
+                    mainLight.position.set(5, 5, 5);
+                    mainLight.castShadow = true;
+                    mainLight.shadow.camera.top = 4; mainLight.shadow.camera.bottom = -4;
+                    mainLight.shadow.camera.left = -4; mainLight.shadow.camera.right = 4;
+                    mainLight.shadow.camera.near = 0.1; mainLight.shadow.camera.far = 20;
+                    mainLight.shadow.mapSize.width = 2048; mainLight.shadow.mapSize.height = 2048;
+                    mainLight.shadow.bias = -0.0001;
+                    scene.add(mainLight);
+
+                    const fillLight = new THREE.DirectionalLight(0xccddff, 0.4);
+                    fillLight.position.set(-5, 3, -5);
+                    scene.add(fillLight);
+                    
+                    groundPlane = new THREE.Mesh(
+                        new THREE.PlaneGeometry(30, 30), 
+                        new THREE.MeshStandardMaterial({ color: 0xc8ced5, roughness: 0.8 })
+                    );
+                    groundPlane.rotation.x = -Math.PI / 2;
+                    groundPlane.receiveShadow = true;
+                    scene.add(groundPlane);
+
+                    const path = 'https://threejs.org/examples/textures/cube/pisa/';
+                    const format = '.png';
+                    const urls = [ path + 'px' + format, path + 'nx' + format, path + 'py' + format, path + 'ny' + format, path + 'pz' + format, path + 'nz' + format ];
+                    envMap = new THREE.CubeTextureLoader().load(urls);
+                    
+                    const loader = new THREE.TextureLoader();
+                    loader.setCrossOrigin(''); 
+                    textures.logo = loader.load('https://placehold.co/300x200/e2e8f0/334155?text=Logo+Anda', t => { 
+                        t.encoding = THREE.sRGBEncoding; 
+                        logoImage = t.image; 
+                    });
+                    textures.wood = loader.load('https://threejs.org/examples/textures/hardwood2_diffuse.jpg', t => { t.encoding = THREE.sRGBEncoding; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(8, 8); updateAppearance()});
+                    textures.kraft = null; 
+                    textures.duplex = null;
+
+                    composer = new THREE.EffectComposer(renderer);
+                    const renderPass = new THREE.RenderPass(scene, camera);
+                    composer.addPass(renderPass);
+
+                    outlinePass = new THREE.OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene, camera);
+                    outlinePass.edgeStrength = 5;
+                    outlinePass.edgeGlow = 0.5;
+                    outlinePass.edgeThickness = 1;
+                    outlinePass.visibleEdgeColor.set('#3b82f6');
+                    outlinePass.hiddenEdgeColor.set('#3b82f6');
+                    composer.addPass(outlinePass);
+                    
+                    saoPass = new THREE.SAOPass(scene, camera, false, true);
+                    saoPass.params.saoBias = 0.5;
+                    saoPass.params.saoIntensity = 0.02;
+                    saoPass.params.saoScale = 20;
+                    saoPass.params.saoKernelRadius = 50;
+                    composer.addPass(saoPass);
+
+                    const effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
+                    effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
+                    composer.addPass(effectFXAA);
+                    
+                    // Check local storage
+                    checkForSavedState(); 
+                    generateSideSelectors();
+                    
+                    // Add grain/noise canvas to all textures once (optimization)
+                    generateGrainTexture();
+
+                    updateBoxModel();
+                    setupEventListeners();
+                    renderer.setAnimationLoop(renderLoop);
+                }
+                
+                let grainTexture = null;
+                function generateGrainTexture() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 512; canvas.height = 512;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Fill with noise
+                    const imageData = ctx.createImageData(512, 512);
+                    const buffer = new Uint32Array(imageData.data.buffer);
+                    for(let i = 0; i < buffer.length; i++) {
+                        if(Math.random() < 0.5) {
+                            // Slight grey noise
+                            buffer[i] = 0x10000000; // A very faint alpha noise
+                        }
+                    }
+                    ctx.putImageData(imageData, 0, 0);
+                    
+                    // This texture will be overlayed on materials to give paper feel
+                    // Actually, better to draw it in createSideTexture
+                }
+                
+                function generateSideSelectors() { ui.contentSideSelect.innerHTML = sideNames.map((name, i) => `<option value="${i}">${name}</option>`).join(''); }
+
+                // New Unified Texture Generator (Pattern + Content + Paper Grain)
+                function createSideTexture(sideIndex, forBumpMap = false) {
+                    const props = state.sideProperties[sideIndex];
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const size = 1024; // Higher res for crisp text
+                    canvas.width = size; canvas.height = size;
+                    
+                    // 1. Draw Background (Solid Color or Pattern)
+                    if (!forBumpMap) {
+                        let bgColor = props.color;
+                        if (state.material === 'kraft') bgColor = '#b08a5f';
+                        else if (state.material === 'duplex') bgColor = '#e0e0e0';
+                        
+                        ctx.fillStyle = bgColor;
+                        ctx.fillRect(0, 0, size, size);
+
+                        if (props.patternType !== 'none') {
+                            drawPattern(ctx, size, size, props.patternType, props.patternColor);
+                        }
+                        
+                        // Add Paper Grain
+                        addNoise(ctx, size, size, 0.05); // 5% noise
+
+                        ctx.fillStyle = props.textColor; 
+                    } else {
+                        ctx.fillStyle = 'black'; 
+                        ctx.fillRect(0, 0, size, size);
+                        ctx.fillStyle = 'white';
+                    }
+
+                    // 2. Draw Content (Text, Logo, or Sticker)
+                    if (props.contentType === 'text') {
+                        ctx.font = `bold ${props.fontSize * 2}px ${props.font}`; // Scale font for high res
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(props.text, size/2 + (props.offsetX/100 * size), size/2 - (props.offsetY/100 * size));
+                    } else if (props.contentType === 'logo' && logoImage) {
+                        const scale = props.logoScale;
+                        const imgW = logoImage.width;
+                        const imgH = logoImage.height;
+                        const aspect = imgW / imgH;
+                        let targetW = size * scale;
+                        let targetH = targetW / aspect;
+                        const x = (size - targetW) / 2 + (props.offsetX/100 * size);
+                        const y = (size - targetH) / 2 - (props.offsetY/100 * size); 
+                        ctx.drawImage(logoImage, x, y, targetW, targetH);
+                    } else if (props.contentType === 'sticker' && props.stickerType) {
+                        drawSticker(ctx, props.stickerType, size, props.stickerScale, props.offsetX, props.offsetY);
+                    }
+
+                    const texture = new THREE.CanvasTexture(canvas);
+                    texture.encoding = THREE.sRGBEncoding;
+                    return texture;
+                }
+                
+                function addNoise(ctx, w, h, opacity) {
+                    const imageData = ctx.getImageData(0, 0, w, h);
+                    const data = imageData.data;
+                    for (let i = 0; i < data.length; i += 4) {
+                        const grain = (Math.random() - 0.5) * 20; 
+                        // Modify existing color
+                        data[i] = Math.min(255, Math.max(0, data[i] + grain));
+                        data[i+1] = Math.min(255, Math.max(0, data[i+1] + grain));
+                        data[i+2] = Math.min(255, Math.max(0, data[i+2] + grain));
+                        // Alpha stays same
+                    }
+                    ctx.putImageData(imageData, 0, 0);
+                }
+
+                function drawSticker(ctx, type, canvasSize, scale, offX, offY) {
+                    const cx = canvasSize / 2 + (offX / 100 * canvasSize);
+                    const cy = canvasSize / 2 - (offY / 100 * canvasSize);
+                    const size = 400 * scale; // Scaled for 1024 canvas
+                    
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+
+                    // Sticker Shadow Effect
+                    ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+                    ctx.shadowBlur = 15;
+                    ctx.shadowOffsetX = 4;
+                    ctx.shadowOffsetY = 4;
+
+                    if (type === 'halal') {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, size/2 + 5, 0, 2 * Math.PI);
+                        ctx.fillStyle = "white";
+                        ctx.fill();
+                        
+                        ctx.shadowColor = "transparent"; 
+                        ctx.beginPath();
+                        ctx.arc(0, 0, size/2, 0, 2 * Math.PI);
+                        ctx.fillStyle = "#009900";
+                        ctx.fill();
+                        ctx.lineWidth = 3;
+                        ctx.strokeStyle = "white";
+                        ctx.stroke();
+                        
+                        ctx.fillStyle = "white";
+                        ctx.font = `bold ${size/3}px Arial`;
+                        ctx.fillText("HALAL", 0, 0);
+                        
+                    } else if (type === 'recycle') {
+                         ctx.font = `${size}px Arial`;
+                         ctx.fillStyle = "white";
+                         ctx.fillText("♻️", 0, 0);
+                         
+                         ctx.shadowColor = "transparent";
+                         ctx.fillStyle = "#006600";
+                         ctx.fillText("♻️", 0, 0); 
+                         
+                    } else if (type === 'natural') {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, size/2 + 5, 0, 2 * Math.PI);
+                        ctx.fillStyle = "white";
+                        ctx.fill();
+
+                        ctx.shadowColor = "transparent";
+                        ctx.beginPath();
+                        ctx.arc(0, 0, size/2, 0, 2 * Math.PI);
+                        ctx.fillStyle = "#8FBC8F"; 
+                        ctx.fill();
+                        
+                        ctx.font = `${size/2}px Arial`;
+                        ctx.fillText("🌿", 0, -size/6);
+                        
+                        ctx.fillStyle = "white";
+                        ctx.font = `bold ${size/6}px Arial`;
+                        ctx.fillText("100% NATURAL", 0, size/4);
+
+                    } else if (type === 'thankyou') {
+                        ctx.fillStyle = "white";
+                        ctx.font = `italic bold ${size/3}px Georgia`;
+                        ctx.fillText("Thank", 0, -size/5);
+                        ctx.fillText("You", 0, size/5);
+                        ctx.font = `${size/3}px Arial`;
+                        ctx.fillText("❤️", 0, size/1.5);
+                        
+                        ctx.shadowColor = "transparent";
+                        ctx.fillStyle = "#333";
+                        ctx.font = `italic bold ${size/3}px Georgia`;
+                        ctx.fillText("Thank", 0, -size/5);
+                        ctx.fillText("You", 0, size/5);
+                        ctx.font = `${size/3}px Arial`;
+                        ctx.fillText("❤️", 0, size/1.5);
+                    }
+                    ctx.restore();
+                }
+
+                // Helper to draw patterns
+                function drawPattern(ctx, w, h, type, color) {
+                    ctx.fillStyle = color;
+                    if (type === 'stripes') {
+                        const thickness = 40;
+                        const gap = 40;
+                        ctx.save();
+                        ctx.translate(w/2, h/2);
+                        ctx.rotate(Math.PI / 4); 
+                        ctx.translate(-w, -h); 
+                        for (let x = -w; x < w * 3; x += thickness + gap) {
+                            ctx.fillRect(x, -h, thickness, h * 3);
+                        }
+                        ctx.restore();
+                    } else if (type === 'polkadots') {
+                        const radius = 20;
+                        const spacing = 80;
+                        for (let x = 0; x < w; x += spacing) {
+                            for (let y = 0; y < h; y += spacing) {
+                                const offsetX = (y / spacing) % 2 === 0 ? 0 : spacing / 2;
+                                ctx.beginPath();
+                                ctx.arc(x + offsetX, y, radius, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+                        }
+                    } else if (type === 'checkered') {
+                        const size = 80;
+                        for (let x = 0; x < w; x += size) {
+                            for (let y = 0; y < h; y += size) {
+                                if (((x/size) + (y/size)) % 2 === 0) {
+                                    ctx.fillRect(x, y, size, size);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                function updateBoxModel() {
+                    if (boxGroup) scene.remove(boxGroup);
+                    boxGroup = new THREE.Group();
+                    boxParts = [];
+                    
+                    const w = (state.width || defaultState.width) / 10;
+                    const h = (state.height || defaultState.height) / 10;
+                    const d = (state.depth || defaultState.depth) / 10;
+                    
+                    const thickness = 0.03; 
+
+                    const createPart = (width, height, name) => {
+                        const geo = new THREE.BoxGeometry(width, height, thickness);
+                        const coreColor = '#d2b48c'; 
+                        const coreMat = new THREE.MeshStandardMaterial({ color: coreColor, roughness: 1.0 });
+                        const faceMat = new THREE.MeshStandardMaterial({ envMap: envMap }); 
+                        const innerMat = new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.8 }); 
+
+                        const materials = [
+                            coreMat, coreMat, coreMat, coreMat,
+                            faceMat, 
+                            innerMat 
+                        ];
+
+                        const part = new THREE.Mesh(geo, materials);
+                        part.name = name;
+                        part.castShadow = true;
+                        part.receiveShadow = true;
+                        
+                        part.userData.isPart = true;
+                        boxParts.push(part);
+                        return part;
+                    };
+                    
+                    // Box Body
+                    const bodyGroup = new THREE.Group();
+                    
+                    const base = createPart(w, d, "Dasar");
+                    base.rotation.x = -Math.PI / 2; 
+                    base.position.y = -h / 2 + thickness/2;
+
+                    const front = createPart(w, h, "Depan");
+                    front.position.z = d / 2 - thickness/2; 
+
+                    const back = createPart(w, h, "Belakang");
+                    back.rotation.y = Math.PI; 
+                    back.position.z = -d / 2 + thickness/2; 
+
+                    const left = createPart(d - thickness*2, h, "Kiri"); 
+                    left.rotation.y = -Math.PI / 2;
+                    left.position.x = -w / 2 + thickness/2;
+                    
+                    const right = createPart(d - thickness*2, h, "Kanan"); 
+                    right.rotation.y = Math.PI / 2;
+                    right.position.x = w / 2 - thickness/2;
+
+                    bodyGroup.add(base, front, back, left, right);
+                    
+                    const lid = createPart(w, d, "Tutup Atas");
+                    lid.rotation.x = -Math.PI/2;
+
+                    lidPivot = new THREE.Group();
+                    lidPivot.add(lid);
+                    
+                    lid.position.z = d / 2 - thickness/2; 
+                    lid.position.y = 0; 
+                    
+                    lidPivot.position.y = h / 2;      
+                    lidPivot.position.z = -d / 2;     
+                    
+                    boxGroup.add(bodyGroup, lidPivot);
+                    
+                    boxGroup.position.y = h / 2 + 0.001; 
+                    controls.target.set(0, h / 2, 0);
+
+                    boxParts.forEach(part => {
+                        part.userData.originalPos = part.position.clone();
+                        part.userData.originalRot = part.rotation.clone();
+                        part.userData.originalParent = part.parent;
+                    });
+                    
+                    scene.add(boxGroup);
+                    updateAppearance();
+                }
+                
+                function updateAppearance() {
+                    if (!boxGroup) return;
+
+                    const roughnessValues = { glossy: 0.05, doff: 1.0, standar: 0.6 };
+                    const roughness = roughnessValues[state.finishing];
+                    const envMapIntensity = state.finishing === 'glossy' ? 1.2 : state.finishing === 'standar' ? 0.6 : 0.2;
+                    
+                    if(state.environment === 'studio') {
+                        groundPlane.material.color.set(0xc8ced5);
+                        groundPlane.material.map = null;
+                        scene.background = new THREE.Color(0xdde2e8);
+                    } else {
+                        groundPlane.material.map = textures[state.environment];
+                        groundPlane.material.color.set(0xffffff); 
+                        scene.background = envMap;
+                    }
+                    groundPlane.material.needsUpdate = true;
+
+                    boxParts.forEach(part => {
+                        const sideIndex = sideNames.indexOf(part.name);
+                        if (sideIndex === -1) return;
+                        
+                        const outerMaterial = part.material[4]; 
+                        const innerMaterial = part.material[5]; 
+                        
+                        const sideProps = state.sideProperties[sideIndex];
+                        
+                        let baseColor = sideProps.color; 
+                        if (state.material === 'kraft') baseColor = '#b08a5f'; 
+                        else if (state.material === 'duplex') baseColor = '#e0e0e0';
+
+                        let hasContent = sideProps.contentType !== 'none';
+                        let hasPattern = sideProps.patternType !== 'none';
+
+                        if (hasContent || hasPattern) {
+                            outerMaterial.map = createSideTexture(sideIndex);
+                            outerMaterial.color.set(0xffffff); 
+                        } else {
+                            outerMaterial.map = null;
+                            outerMaterial.color.set(baseColor);
+                        }
+                        
+                        if (state.foodGradeLining) {
+                            innerMaterial.color.set('#f0f0f0'); 
+                            innerMaterial.roughness = 0.2;
+                            innerMaterial.metalness = 0.1;
+                        } else {
+                            innerMaterial.color.set(state.material === 'kraft' ? '#b08a5f' : '#ffffff');
+                            innerMaterial.roughness = 0.8;
+                            innerMaterial.metalness = 0;
+                        }
+
+                        outerMaterial.bumpMap = null; outerMaterial.bumpScale = 0.01; outerMaterial.metalness = 0;
+                        outerMaterial.envMapIntensity = envMapIntensity;
+                        
+                        if(hasContent && (sideProps.premiumFinish === 'emboss' || sideProps.premiumFinish === 'deboss')){
+                            outerMaterial.bumpMap = createSideTexture(sideIndex, true);
+                            outerMaterial.bumpScale = sideProps.premiumFinish === 'emboss' ? 0.015 : -0.015;
+                        } else if (sideProps.premiumFinish.startsWith('foil')){
+                            outerMaterial.metalness = 1.0;
+                            outerMaterial.roughness = 0.15;
+                            outerMaterial.color.set(sideProps.premiumFinish === 'foilEmas' ? '#FFD700' : '#C0C0C0');
+                            outerMaterial.map = null; 
+                        }
+                        
+                        if(!sideProps.premiumFinish.startsWith('foil')) {
+                            outerMaterial.roughness = roughness;
+                        }
+                        
+                        outerMaterial.needsUpdate = true;
+                        innerMaterial.needsUpdate = true;
+                    });
+                }
+                
+                function animateBox(open = true) {
+                    const targetPivotRot = open ? -Math.PI * 0.6 : 0;
+                    animateValue(lidPivot.rotation.x, targetPivotRot, 1200, (val) => { lidPivot.rotation.x = val; });
+                }
+
+                function animateValue(start, end, duration, updateCallback) {
+                    let startTime = null;
+                    function step(timestamp) {
+                        if (!startTime) startTime = timestamp;
+                        const progress = Math.min((timestamp - startTime) / duration, 1);
+                        const easedProgress = 0.5 * (1 - Math.cos(progress * Math.PI));
+                        updateCallback(start + (end - start) * easedProgress);
+                        if (progress < 1) requestAnimationFrame(step);
+                    }
+                    requestAnimationFrame(step);
+                }
+
+                function setupEventListeners() {
+                    ui.sizePresets.addEventListener('change', e => {
+                        if (e.target.value === 'custom') return;
+                        const [w,d,h] = e.target.value.split(',').map(parseFloat);
+                        state.width = w; state.depth = d; state.height = h;
+                        updateUIFromState();
+                        updateBoxModel();
+                    });
+                    
+                    ['customWidth', 'customHeight', 'customDepth', 'materialSelect', 'finishingSelect', 'environmentSelect', 'foodGradeLining'].forEach(id => {
+                        const el = ui[id];
+                        const eventType = el.type === 'checkbox' ? 'change' : (el.tagName === 'SELECT' ? 'change' : 'input');
+                        el.addEventListener(eventType, e => { 
+                            let propName = id;
+                            let value = el.type === 'checkbox' ? e.target.checked : e.target.value;
+                            if (id.startsWith('custom')) {
+                                propName = id.replace('custom','').toLowerCase();
+                                value = parseFloat(value) || defaultState[propName];
+                            } else if (id.endsWith('Select')) {
+                                propName = id.replace('Select','');
+                            }
+                            state[propName] = value;
+                            
+                            if (e.target.id === 'materialSelect') {
+                                const newColor = (value === 'ivory') ? '#ffffff' : (value === 'kraft' ? '#b08a5f' : '#e0e0e0');
+                                state.sideProperties.forEach(prop => prop.color = newColor);
+                                updateUIFromState();
+                            }
+
+                            if (id.startsWith('custom')) updateBoxModel();
+                            else updateAppearance();
+                        });
+                    });
+
+                    ui.lightIntensitySlider.addEventListener('input', e => { 
+                        const intensity = parseFloat(e.target.value);
+                        state.lightIntensity = intensity;
+                        scene.traverse(obj => { if (obj.isLight) obj.intensity = (obj.isHemisphereLight ? 0.6 : 1.0) * intensity; });
+                        ui.lightIntensityValue.textContent = Math.round(state.lightIntensity / 2.5 * 100); 
+                    });
+                    
+                    ui.contentSideSelect.addEventListener('change', (e) => {
+                        const sideIndex = parseInt(e.target.value);
+                        const partName = sideNames[sideIndex];
+                        const part = boxParts.find(p => p.name === partName);
+                        if (part) {
+                            selectedPart = part;
+                            outlinePass.selectedObjects = [selectedPart];
+                        }
+                        updateUIFromState();
+                    });
+
+                    ui.sideColorPicker.addEventListener('input', e => { if(state.material === 'ivory'){ state.sideProperties[parseInt(ui.contentSideSelect.value)].color = e.target.value; updateAppearance(); } });
+                    ui.contentTypeRadios.forEach(radio => radio.addEventListener('change', e => { state.sideProperties[parseInt(ui.contentSideSelect.value)].contentType = e.target.value; updateUIFromState(); updateAppearance(); }));
+                    
+                    ui.stickerBtns.forEach(btn => {
+                        btn.addEventListener('click', e => {
+                            const type = e.target.dataset.sticker;
+                            state.sideProperties[parseInt(ui.contentSideSelect.value)].stickerType = type;
+                            updateAppearance();
+                        });
+                    });
+
+                    ui.patternSelect.addEventListener('change', e => {
+                        state.sideProperties[parseInt(ui.contentSideSelect.value)].patternType = e.target.value;
+                        updateAppearance();
+                    });
+                    ui.patternColorPicker.addEventListener('input', e => {
+                        state.sideProperties[parseInt(ui.contentSideSelect.value)].patternColor = e.target.value;
+                        updateAppearance();
+                    });
+
+                    ['logoScaleSlider', 'stickerScaleSlider', 'contentOffsetX', 'contentOffsetY', 'premiumFinishSelect'].forEach(id => {
+                        const eventType = id.includes('Select') ? 'change' : 'input';
+                        ui[id].addEventListener(eventType, e => { 
+                            const side = state.sideProperties[parseInt(ui.contentSideSelect.value)]; 
+                            if(id === 'logoScaleSlider') side.logoScale = parseFloat(e.target.value); 
+                            else if(id === 'stickerScaleSlider') side.stickerScale = parseFloat(e.target.value);
+                            else if(id === 'contentOffsetX') side.offsetX = parseInt(e.target.value); 
+                            else if (id === 'premiumFinishSelect') side.premiumFinish = e.target.value; 
+                            else side.offsetY = parseInt(e.target.value); 
+                            updateUIFromState(); updateAppearance(); 
+                        });
+                    });
+                    
+                    ui.logoUpload.addEventListener('change', e => { 
+                        if(e.target.files[0]) { 
+                            const reader = new FileReader(); 
+                            reader.onload = res => { 
+                                const img = new Image();
+                                img.src = res.target.result;
+                                img.onload = () => {
+                                    logoImage = img;
+                                    updateAppearance();
+                                };
+                            }; 
+                            reader.readAsDataURL(e.target.files[0]); 
+                        } 
+                    });
+                    
+                    ['textInput', 'fontSelect', 'fontSizeSlider', 'textColorPicker'].forEach(id => {
+                        const eventType = (id === 'textInput' || id.includes('Slider')) ? 'input' : 'change';
+                        ui[id].addEventListener(eventType, e => { 
+                            const side = state.sideProperties[parseInt(ui.contentSideSelect.value)]; 
+                            if(id === 'textInput') side.text = e.target.value; 
+                            else if(id === 'fontSelect') side.font = e.target.value; 
+                            else if(id === 'fontSizeSlider') side.fontSize = parseInt(e.target.value); 
+                            else side.textColor = e.target.value; 
+                            updateUIFromState(); updateAppearance(); 
+                        });
+                    });
+                    
+                    let boxOpen = false; ui.animateBoxBtn.addEventListener('click', () => { boxOpen = !boxOpen; animateBox(boxOpen); });
+                    
+                    ui.captureButton.addEventListener('click', captureScreenshot);
+                    
+                    ui.saveButton.addEventListener('click', () => {
+                        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                        saveState();
+                        showToast('Desain Anda berhasil disimpan di browser!', 'success');
+                    });
+                    
+                    ui.resetButton.addEventListener('click', resetState);
+                    ui.loadYesBtn.addEventListener('click', () => { loadState(JSON.parse(localStorage.getItem('arjunaMockupDesign'))); ui.loadModal.classList.add('opacity-0', 'hidden'); });
+                    ui.loadNoBtn.addEventListener('click', () => ui.loadModal.classList.add('opacity-0', 'hidden'));
+                    
+                    ui.quoteButton.addEventListener('click', () => { 
+                        confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#22c55e', '#ffffff'] }); 
+                        ui.quoteModal.classList.remove('hidden'); 
+                        setTimeout(() => ui.quoteModal.classList.remove('opacity-0'), 10); 
+                    });
+                    
+                    ui.quoteCloseBtn.addEventListener('click', () => ui.quoteModal.classList.add('opacity-0', 'hidden'));
+                    ui.quoteForm.addEventListener('submit', handleQuoteSubmit);
+                    
+                    window.addEventListener('resize', () => { 
+                        const width = ui.container.clientWidth;
+                        const height = ui.container.clientHeight;
+                        camera.aspect = width / height; 
+                        camera.updateProjectionMatrix(); 
+                        renderer.setSize(width, height);
+                        composer.setSize(width, height);
+                        const pixelRatio = renderer.getPixelRatio();
+                        const effectFXAA = composer.passes[composer.passes.length -1];
+                        effectFXAA.uniforms['resolution'].value.set(1 / (width * pixelRatio), 1 / (height * pixelRatio));
+                    });
+                    ui.container.addEventListener('mousedown', onCanvasClick);
+                }
+
+                function onCanvasClick(event) {
+                    controls.autoRotate = false; // Stop autorotate on user interaction
+                    const raycaster = new THREE.Raycaster();
+                    const mouse = new THREE.Vector2();
+                    const rect = renderer.domElement.getBoundingClientRect();
+                    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+                    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+                    raycaster.setFromCamera(mouse, camera);
+                    const intersects = raycaster.intersectObjects(boxParts, false);
+
+                    if (intersects.length > 0) {
+                        const selectedObject = intersects[0].object;
+
+                        if (selectedObject.userData.isPart) {
+                            selectedPart = selectedObject;
+                            outlinePass.selectedObjects = [selectedPart];
+                            const sideIndex = sideNames.indexOf(selectedPart.name);
+                            if (sideIndex > -1) {
+                                ui.contentSideSelect.value = sideIndex;
+                                updateUIFromState();
+                                const contentAccordionBtn = document.querySelector('#accordion-container button:nth-of-type(3)');
+                                if(contentAccordionBtn && !contentAccordionBtn.classList.contains('active')) {
+                                    contentAccordionBtn.click();
+                                }
+                            }
+                        } else {
+                           selectedPart = null;
+                           outlinePass.selectedObjects = [];
+                        }
+                    } else {
+                        selectedPart = null;
+                        outlinePass.selectedObjects = [];
+                    }
+                }
+                
+                function captureScreenshot() {
+                    outlinePass.selectedObjects = []; // Hide outline for screenshot
+                    composer.render(); // Render once without outline
+                    const dataURL = renderer.domElement.toDataURL('image/png');
+                    const link = document.createElement('a');
+                    link.href = dataURL;
+                    link.download = 'desain-kemasan-arjuna.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    if(selectedPart) {
+                        outlinePass.selectedObjects = [selectedPart]; // Restore outline
+                    }
+                }
+
+                function handleQuoteSubmit(e) {
+                    e.preventDefault();
+                    const name = ui.quoteForm.querySelector('#quote-name').value;
+                    const wa = ui.quoteForm.querySelector('#quote-whatsapp').value;
+                    const qty = ui.quoteForm.querySelector('#quote-quantity').value;
+                    let specSummary = `Dimensi: ${state.width}x${state.depth}x${state.height} cm, Material: ${state.material}, Laminasi: ${state.finishing}, Jumlah: ${qty} pcs.`;
+                    state.sideProperties.forEach((p, i) => { if (p.contentType !== 'none') specSummary += ` | Sisi ${sideNames[i]}: ${p.contentType} (${p.contentType==='text' ? p.text : 'logo'})` + (p.premiumFinish !== 'none' ? `, Finishing: ${p.premiumFinish}`: ''); });
+                    const message = encodeURIComponent(`Halo Percetakan Arjuna, saya ${name} (${wa}) tertarik untuk membuat kemasan dengan spesifikasi berikut:\n\n${specSummary}\n\nMohon info penawaran harganya. Terima kasih.`);
+                    window.open(`https://wa.me/6282226903074?text=${message}`, '_blank');
+                    ui.quoteModal.classList.add('opacity-0', 'hidden');
+                }
+                
+                function renderLoop() {
+                    controls.update();
+                    composer.render();
+                }
+
+                function updateUIFromState() {
+                    ui.customWidth.value = state.width; ui.customHeight.value = state.height; ui.customDepth.value = state.depth; ui.materialSelect.value = state.material; ui.finishingSelect.value = state.finishing; ui.lightIntensitySlider.value = state.lightIntensity; ui.lightIntensityValue.textContent = Math.round(state.lightIntensity / 2.5 * 100);
+                    ui.foodGradeLining.checked = state.foodGradeLining;
+                    ui.environmentSelect.value = state.environment;
+
+                    const sideProps = state.sideProperties[parseInt(ui.contentSideSelect.value)];
+                    ui.sideColorPicker.value = sideProps.color;
+                    ui.sideColorPicker.disabled = state.material !== 'ivory'; 
+
+                    document.querySelector(`input[name="content-type"][value="${sideProps.contentType}"]`).checked = true;
+                    
+                    ui.patternSelect.value = sideProps.patternType || 'none';
+                    ui.patternColorPicker.value = sideProps.patternColor || '#e0e0e0';
+
+                    const showContentControls = ui.contentSideSelect.value !== '' && sideNames.includes(sideNames[parseInt(ui.contentSideSelect.value)] );
+                    ui.contentControls.classList.toggle('hidden', !showContentControls);
+                    if(showContentControls){
+                        ui.logoControls.classList.toggle('hidden', sideProps.contentType !== 'logo');
+                        ui.textControls.classList.toggle('hidden', sideProps.contentType !== 'text');
+                        ui.stickerControls.classList.toggle('hidden', sideProps.contentType !== 'sticker');
+                        
+                        ui.contentOffsetX.value = sideProps.offsetX; ui.offsetXValue.textContent = sideProps.offsetX;
+                        ui.contentOffsetY.value = sideProps.offsetY; ui.offsetYValue.textContent = sideProps.offsetY;
+                        ui.premiumFinishSelect.value = sideProps.premiumFinish;
+
+                        if (sideProps.contentType === 'logo') { ui.logoScaleSlider.value = sideProps.logoScale; ui.logoScaleValue.textContent = Math.round(sideProps.logoScale * 100); } 
+                        else if (sideProps.contentType === 'text') { ui.textInput.value = sideProps.text; ui.fontSelect.value = sideProps.font; ui.fontSizeSlider.value = sideProps.fontSize; ui.fontSizeValue.textContent = sideProps.fontSize; ui.textColorPicker.value = sideProps.textColor; }
+                        else if (sideProps.contentType === 'sticker') { ui.stickerScaleSlider.value = sideProps.stickerScale || 1.0; ui.stickerScaleValue.textContent = Math.round((sideProps.stickerScale || 1.0) * 100); }
+                    }
+                }
+
+                function saveState() { localStorage.setItem('arjunaMockupDesign', JSON.stringify(state)); }
+                function loadState(saved) { state = saved; updateUIFromState(); updateBoxModel(); }
+                function checkForSavedState() { if (localStorage.getItem('arjunaMockupDesign')) { ui.loadModal.classList.remove('hidden'); setTimeout(() => ui.loadModal.classList.remove('opacity-0'), 10); } }
+                function resetState() { if(confirm("Yakin ingin mereset semua kustomisasi?")){ localStorage.removeItem('arjunaMockupDesign'); selectedPart = null; outlinePass.selectedObjects = []; state = JSON.parse(JSON.stringify(defaultState)); ui.contentSideSelect.value = 0; updateUIFromState(); updateBoxModel(); } }
+                
+                // --- Gemini AI Functions (Code Removed) ---
+                const geminiModal = document.getElementById('gemini-modal');
+                const geminiCloseBtn = document.getElementById('gemini-close-btn');
+                const geminiTaglineBtn = document.getElementById('gemini-tagline-btn');
+                const geminiForm = document.getElementById('gemini-form');
+                const geminiProductType = document.getElementById('gemini-product-type');
+                const geminiPromptView = document.getElementById('gemini-prompt-view');
+                const geminiResultsView = document.getElementById('gemini-results-view');
+                const geminiLoading = document.getElementById('gemini-loading');
+                const geminiResultsList = document.getElementById('gemini-results-list');
+                const geminiBackBtn = document.getElementById('gemini-back-btn');
+
+                if (geminiTaglineBtn) {
+                    geminiTaglineBtn.addEventListener('click', () => {
+                        geminiModal.classList.remove('hidden');
+                        setTimeout(() => geminiModal.classList.remove('opacity-0'), 10);
+                    });
+                }
+                
+                const closeGeminiModal = () => {
+                    geminiModal.classList.add('opacity-0');
+                    setTimeout(() => {
+                        geminiModal.classList.add('hidden');
+                        if(geminiPromptView) geminiPromptView.classList.remove('hidden');
+                        if(geminiResultsView) geminiResultsView.classList.add('hidden');
+                        if(geminiResultsList) geminiResultsList.innerHTML = '';
+                    }, 300);
+                }
+                if(geminiCloseBtn) geminiCloseBtn.addEventListener('click', closeGeminiModal);
+                if(geminiBackBtn) geminiBackBtn.addEventListener('click', () => {
+                     geminiPromptView.classList.remove('hidden');
+                     geminiResultsView.classList.add('hidden');
+                     geminiResultsList.innerHTML = '';
+                });
+
+                if(geminiForm) {
+                    geminiForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const productType = geminiProductType.value;
+                        if (!productType) return;
+
+                        geminiPromptView.classList.add('hidden');
+                        geminiResultsView.classList.remove('hidden');
+                        geminiLoading.classList.remove('hidden');
+                        geminiResultsList.innerHTML = '';
+
+                        const userQuery = `Buatkan 5 ide tagline yang singkat dan menarik untuk kemasan produk "${productType}".`;
+                        const systemPrompt = `Anda adalah seorang ahli branding yang kreatif, spesialisasinya adalah membuat tagline pendek (3-5 kata) untuk kemasan produk UMKM. Berikan 5 ide.`;
+                        
+                        try {
+                            const response = await callGeminiAPI(userQuery, systemPrompt);
+                            displayGeminiResults(response.text);
+                        } catch (error) {
+                            console.error('Error calling Gemini API:', error);
+                            displayGeminiResults("Maaf, terjadi kesalahan saat mengambil ide tagline. Coba lagi nanti.");
+                        }
+                    });
+                }
+                
+                function displayGeminiResults(text) {
+                    geminiLoading.classList.add('hidden');
+                    const lines = text.split('\n').filter(line => line.trim().length > 0);
+                    lines.forEach(line => {
+                        const tagline = line.replace(/^\d+\.\s*/, '').replace(/"/g, '').trim();
+                        const p = document.createElement('p');
+                        p.textContent = tagline;
+                        p.className = "cursor-pointer p-2 hover:bg-gray-100 rounded";
+                        p.onclick = () => {
+                            ui.textInput.value = tagline;
+                            // Trigger input event to update 3D model
+                            ui.textInput.dispatchEvent(new Event('input', { bubbles: true }));
+                            closeGeminiModal();
+                        };
+                        geminiResultsList.appendChild(p);
+                    });
+                }
+                
+                async function callGeminiAPI(userQuery, systemPrompt, retries = 3, delay = 1000) {
+                    const apiKey = ""; // API key will be injected
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+                    const payload = {
+                        contents: [{ parts: [{ text: userQuery }] }],
+                        systemInstruction: {
+                            parts: [{ text: systemPrompt }]
+                        },
+                    };
+                    
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (!response.ok) {
+                            if (response.status === 429 && retries > 0) {
+                                await new Promise(res => setTimeout(res, delay));
+                                return callGeminiAPI(userQuery, systemPrompt, retries - 1, delay * 2);
+                            }
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        const result = await response.json();
+                        const candidate = result.candidates?.[0];
+                        if (candidate && candidate.content?.parts?.[0]?.text) {
+                            return { text: candidate.content.parts[0].text };
+                        } else {
+                            throw new Error('Invalid response structure from Gemini API');
+                        }
+                    } catch (error) {
+                        if (retries > 0) {
+                            await new Promise(res => setTimeout(res, delay));
+                            return callGeminiAPI(userQuery, systemPrompt, retries - 1, delay * 2);
+                        }
+                        console.error('Error after retries:', error);
+                        throw error;
+                    }
+                }
+                
+                init3D();
+            }
+        });
+    </script>
+</body>
+</html>
